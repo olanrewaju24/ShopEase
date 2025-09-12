@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { useCart } from "../state/CartContext.jsx";   // ✅ use hook instead
+import { CartContext } from "../state/CartContext";
 
 const ProductDetail = () => {
-  const { id } = useParams();
+  const { id } = useParams(); // get product id from route
   const [product, setProduct] = useState(null);
-  const { addToCart } = useCart();   // ✅ cleaner
+  const { addToCart } = useContext(CartContext);
 
   useEffect(() => {
     fetch(`https://dummyjson.com/products/${id}`)
@@ -21,20 +21,25 @@ const ProductDetail = () => {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Product Image */}
         <img
           src={product.images?.[0]}
           alt={product.title}
           className="w-full h-96 object-cover rounded shadow"
         />
 
+        {/* Product Info */}
         <div>
           <h1 className="text-3xl font-bold mb-3">{product.title}</h1>
-          <p className="text-gray-600 mb-2">{product.category}</p>
+          <p className="text-gray-600 mb-2">
+            {product.category?.name || product.category}
+          </p>
           <p className="text-xl font-semibold text-green-600 mb-4">
             ${product.price}
           </p>
           <p className="text-gray-700 mb-6">{product.description}</p>
 
+          {/* Add to Cart */}
           <button
             onClick={() => addToCart(product)}
             className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800"

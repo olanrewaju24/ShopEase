@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar.jsx'
 import ProductList from './pages/ProductList.jsx'
 import ProductDetails from './pages/ProductDetails.jsx'
@@ -18,16 +18,21 @@ function PrivateRoute({ children }) {
 }
 
 export default function App() {
+  const location = useLocation() // 👈 get current route
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <Hero />
+      
+      {/* Show Hero ONLY on homepage */}
+      {location.pathname === "/" && <Hero />}
+      
       <main className="flex-1 container py-6">
         <Routes>
           <Route path="/" element={<ProductList />} />
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/shoes" element={<Shoes />} />
-          <Route path="/product/:id" element={<ProductDetails2 />} />
+          <Route path="/product2/:id" element={<ProductDetails2 />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={
             <PrivateRoute>
@@ -44,8 +49,9 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
+      
       <footer className="border-t py-6 text-center text-sm text-gray-500">
-        @ShopEase
+        @ShopEase 2025
       </footer>
     </div>
   )
